@@ -1,0 +1,109 @@
+<% include ../partials/header %>
+<% include ../partials/menu %>
+	<div class="container">
+		<br>
+		<div class="row">
+			<div class="col-4">
+				<div class="card">
+				<!-- TODO: Modify the ejs code below, to conditionally set the image_src to be from our chosen player -->
+				  <% 
+				  var image_src = '../resources/img/helmet.jpg';
+				  if(player)
+				  {
+					  image_src = player[0].img_src;
+				  }
+				  %>
+				 <img class="card-img-top" id="player_img" src= "<%- image_src %>" alt="Image of Football Player">
+				  <div class="card-body mx-auto">
+					<form class="form"action="/player_info/post" method="get">
+						<select class="custom-select" name="player_choice" onchange="this.form.submit()">
+							 <option selected>Select Player</option>
+							 <!-- TODO: Populate our select with player options
+							 			For each player, set a new option with a value matching the palyer's id, 
+										 but will display the player's name-->
+								<%
+								if(data)
+								{
+									var playerredner = '';
+									//console.log('data is present! In the client')
+									//console.log(JSON.stringify(data))
+									data.forEach(function(item){
+										playerredner += '<option value ="' + item.id + '">' + item.name +'</option>'; 
+									}); %>
+									<%- playerredner%>
+								 <% } %>
+
+								 <% if(player) {
+									///console.log('player is not null on the client : ' + JSON.stringify(player))
+								}%>
+
+								<% if(gamesPlayed) {
+									//console.log('gamesPlayed is not null on the client : ' + JSON.stringify(gamesPlayed))
+								}%>
+
+
+						</select>
+					</form>
+				  </div>
+				</div>
+			</div>
+			<div class="col-8">
+				<div class="table-responsive">
+					<table class="table">
+						<tr>
+							<!-- TODO: Set Player Information
+							 			If a player has been selected, fill in their information in each of the fields below.
+											 You'll need to calculate here the player's average rushing, receiving, and passing yards.-->
+											 <%
+											 if(player)
+
+											 {
+											 	console.log("zaid look at this: player is::: " + JSON.stringify(player)) 
+											 	/* The reason why you are going wrong is because this is an array of objects and not just an object. Look at the console for the above statement. so do player[0].year etc etc you should be good.*/
+												 var year = player[0].year;
+												 var major = player[0].major;
+												 var games_p = gamesPlayed.count;
+												 var passingYrds = player[0].passing_yards;
+												 var aP = passingYrds / games_p;
+												 var avgPass = aP.toFixed(2);
+												 var rushingYrds = player[0].rushing_yards;
+												 var aR = rushingYrds / games_p;
+												 var avgRush = aR.toFixed(2);
+												 var receivingYrds = player[0].receiving_yards;
+												 var aRec = receivingYrds / games_p;
+												 var avgRecieving = aRec.toFixed(2);
+												 var image = player[0].img_src;
+												 
+											 }
+											 %>
+							<th>Year</th>
+							<td><%- year%>	</td>
+						</tr>
+						<tr>
+							<th>Major</th>
+							<td><%- major%>	</td>
+						</tr>
+						<tr>
+							<th>Games Played</th>
+							<td><%- games_p%>	</td>
+						</tr>
+						<tr>
+							<td>Passing Yards: <%- passingYrds%> </td>
+							<td>Avg. Passing Yards: <%- avgPass%></td>
+						</tr>
+						<tr>
+							<td>Rushing Yards: <%- rushingYrds%></td>
+							<td>Avg. Rushing Yards: <%- avgRush%></td>
+						</tr>
+						<tr>
+							<td>Receiving Yards: <%- receivingYrds%></td>
+							<td>Avg. Receiving Yards: <%- avgRecieving%></td>
+						</tr>
+					</table>			
+
+				</div>
+			</div>
+		</div>
+	</div>
+  
+<% include ../partials/footer %>
